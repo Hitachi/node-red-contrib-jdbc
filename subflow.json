@@ -1,0 +1,153 @@
+{
+    "id": "3e543cc0192c0fb2",
+    "type": "subflow",
+    "name": "jdbc",
+    "info": "",
+    "category": "storage",
+    "in": [
+        {
+            "x": 60,
+            "y": 80,
+            "wires": [
+                {
+                    "id": "2459c955edfdcf07"
+                }
+            ]
+        }
+    ],
+    "out": [
+        {
+            "x": 340,
+            "y": 80,
+            "wires": [
+                {
+                    "id": "2459c955edfdcf07",
+                    "port": 0
+                }
+            ]
+        }
+    ],
+    "env": [
+        {
+            "name": "url",
+            "type": "str",
+            "value": "jdbc:postgresql://127.0.0.1/",
+            "ui": {
+                "icon": "font-awesome/fa-globe",
+                "label": {
+                    "en-US": "URL"
+                },
+                "type": "input",
+                "opts": {
+                    "types": [
+                        "str"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "user",
+            "type": "str",
+            "value": "user",
+            "ui": {
+                "icon": "font-awesome/fa-user",
+                "label": {
+                    "en-US": "User"
+                },
+                "type": "input",
+                "opts": {
+                    "types": [
+                        "str"
+                    ]
+                }
+            }
+        },
+        {
+            "name": "password",
+            "type": "cred",
+            "ui": {
+                "icon": "font-awesome/fa-lock",
+                "label": {
+                    "en-US": "Password"
+                }
+            }
+        },
+        {
+            "name": "driver",
+            "type": "str",
+            "value": "postgresql-42.2.23.jar",
+            "ui": {
+                "icon": "font-awesome/fa-database",
+                "label": {
+                    "en-US": "JDBC driver"
+                },
+                "type": "input",
+                "opts": {
+                    "types": [
+                        "str"
+                    ]
+                }
+            }
+        }
+    ],
+    "meta": {
+        "module": "node-red-contrib-jdbc",
+        "type": "jdbc",
+        "version": "0.0.1",
+        "author": "kazuhitoyokoi",
+        "keywords": "node-red,jdbc,database,db,postgres",
+        "license": "Apache-2.0"
+    },
+    "color": "#009D83",
+    "icon": "font-awesome/fa-database",
+    "status": {
+        "x": 340,
+        "y": 140,
+        "wires": [
+            {
+                "id": "69028a59db9d1e76",
+                "port": 0
+            }
+        ]
+    },
+    "flow": [
+        {
+            "id": "2459c955edfdcf07",
+            "type": "function",
+            "z": "3e543cc0192c0fb2",
+            "name": "database",
+            "func": "if (cn) {\n    node.status({fill: 'blue', shape: 'dot', text: 'requesting' });\n    cn.conn.createStatement(function (err, statement) {\n        if (msg.payload.match(/^select/i)) {\n            statement.executeQuery(msg.payload, function (err, resultset) {\n                if (err) {\n                    node.error(err);\n                    node.status({fill: 'red', shape: 'ring', text: 'error' });\n                } else {\n                    resultset.toObjArray(function (err, result) {\n                        msg.payload = result;\n                        node.send(msg);\n                        node.status({});\n                    });\n                }\n            });\n        } else {\n            statement.executeUpdate(msg.payload, function (err, result) {\n                if (err) {\n                    node.error(err);\n                    node.status({fill: 'red', shape: 'ring', text: 'error' });\n                } else {\n                    msg.payload = result;\n                    node.send(msg);\n                    node.status({});\n                }\n            });\n        }\n    });\n}",
+            "outputs": 1,
+            "noerr": 0,
+            "initialize": "cn = null;\nif (!java.classpath.includes(env.get('driver'))) {\n    java.classpath.push.apply(java.classpath, [env.get('driver')]);\n}\n\nvar db = new jdbc({\n    url: env.get('url'),\n    user: env.get('user'),\n    password: env.get('password')\n});\n\ndb.reserve(function (err, conn) {\n    if (err) {\n        node.error(err);\n        node.status({fill: 'red', shape: 'ring', text: 'disconnected' });\n    } else {\n        cn = conn;\n        db.initialize(function (err) {\n            node.status({fill: 'green', shape: 'dot', text: 'connected' });\n        });\n    }\n});",
+            "finalize": "if (cn) {\n    cn.conn.close(function() {\n        node.status({});\n    });\n}",
+            "libs": [
+                {
+                    "var": "jdbc",
+                    "module": "jdbc"
+                },
+                {
+                    "var": "java",
+                    "module": "java"
+                }
+            ],
+            "x": 200,
+            "y": 80,
+            "wires": [
+                []
+            ]
+        },
+        {
+            "id": "69028a59db9d1e76",
+            "type": "status",
+            "z": "3e543cc0192c0fb2",
+            "name": "",
+            "scope": null,
+            "x": 210,
+            "y": 140,
+            "wires": [
+                []
+            ]
+        }
+    ]
+}
