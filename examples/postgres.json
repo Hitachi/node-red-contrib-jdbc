@@ -68,7 +68,7 @@
         "id": "bc356619.5e7468",
         "type": "inject",
         "z": "8c3e2f6b58b15146",
-        "name": "INSERT INTO postalcode VALUES ('2510004', 'Yokohama');",
+        "name": "INSERT INTO postalcode VALUES ('2440817', 'Yokohama');",
         "props": [
             {
                 "p": "payload"
@@ -83,7 +83,7 @@
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
-        "payload": "INSERT INTO postalcode VALUES ('2510004', 'Yokohama');",
+        "payload": "INSERT INTO postalcode VALUES ('2440817', 'Yokohama');",
         "payloadType": "str",
         "x": 280,
         "y": 220,
