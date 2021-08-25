@@ -8,7 +8,7 @@ By the JDBC driver, this node can access these databases without the Node.js mod
 
 ## Install
 
-(1) Install Java environment
+(1) Install Java environment on Ubuntu
 
 (2) Run the following command in your Node-RED user directory - typically `~/.node-red`
 
