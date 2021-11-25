@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-jdbc",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Node-RED node to access database using JDBC driver",
   "node-red": {
     "nodes": {
